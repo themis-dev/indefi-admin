@@ -3,7 +3,7 @@
     <!-- <div class="conncet" @click="connect">连接钱包</div> -->
     <div class="home-content">
       <div class="content-item">
-        <h1>TVL数据</h1>
+        <h1>TVL数据 </h1>
         <div>
           <a-statistic title="总览总存款" :precision="2" :value="tvl.tvl" style="margin-bottom: 20px" prefix='$'/>
           <a-statistic title="无损矿池TVL" :precision="2" :value="tvl.nonPrincipalTvl" style="margin-bottom: 20px" prefix='$'/>
