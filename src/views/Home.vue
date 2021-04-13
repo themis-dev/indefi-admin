@@ -7,9 +7,9 @@
         <div>
           <a-statistic title="总览总存款" :precision="2" :value="tvl.tvl" style="margin-bottom: 20px" prefix='$'/>
           <a-statistic title="无损矿池TVL" :precision="2" :value="tvl.nonPrincipalTvl" style="margin-bottom: 20px" prefix='$'/>
-          <a-statistic title="生态矿池TVL" :precision="2" :value="tvl.ecologicalTvl " style="margin-bottom: 20px"  prefix='$'/>
-          <a-statistic title="MdexTVL" :precision="2" :value="tvl.liquidityPippiTvl " style="margin-bottom: 20px" prefix='$' />
-          <a-statistic title="PippiTVL" :precision="2" :value="tvl.liquidityMdxTvl " style="margin-bottom: 20px"  prefix='$'/>
+          <a-statistic title="生态矿池TVL" :precision="2" :value="tvl.ecologicalTvl" style="margin-bottom: 20px"  prefix='$'/>
+          <a-statistic title="MdexTVL" :precision="2" :value="tvl.liquidityMdxTvl" style="margin-bottom: 20px" prefix='$' />
+          <a-statistic title="PippiTVL" :precision="2" :value="tvl.liquidityPippiTvl" style="margin-bottom: 20px"  prefix='$'/>
         </div>
       </div>
        <div class="content-item">
