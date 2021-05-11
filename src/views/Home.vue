@@ -16,8 +16,9 @@
         <h1>所有池子剩余IDT数量，解锁时间, 日产量</h1>
         <div style="margin-bottom: 10px">钱包地址： {{account}}</div>
         <a-table :columns="columns" :data-source="data" :pagination='false' bordered>
-          <a slot="name" slot-scope="text">{{text.includes('mdex') ? text.substring(0, text.length -12) + ' (MDEX)' : text.includes('pippi') ? text.substring(0, text.length -13) + ' (PIPPI)': text.substring(0, text.length -8)}}</a>
-          <span slot="action" slot-scope="text, record">
+          <a slot="name" slot-scope="text" v-if="text !== 'Total'">{{text.includes('mdex') ? text.substring(0, text.length -12) + ' (MDEX)' : text.includes('pippi') ? text.substring(0, text.length -13) + ' (PIPPI)': text.substring(0, text.length -8)}}</a>
+          <a slot="name" slot-scope="text" v-else>{{text}}</a>
+          <span slot="action" slot-scope="text, record" v-if="record.name !== 'Total'">
             <a @click="() => openVisible(record.name)">转入IDT</a>
             <a-divider type="vertical" />
             <a @click="() => openRateVisible(record.name, record.name.includes('mdex') ? record.name.substring(0, record.name.length -12) + 'MDEX' : record.name.includes('pippi') ? record.name.substring(0, record.name.length -13) + 'PIPPI': record.name.substring(0, record.name.length -8))">调整池子日产量</a>
@@ -90,6 +91,8 @@ export default {
       rateVisible: false,
       rateName: '',
       tvl: {},
+      poolName: '',
+      ratePoolName: '',
       columns:[
         {
           title: '池子名称',
@@ -274,6 +277,13 @@ export default {
           unlockTime: 0,
           idtDaily: 0
         },
+        {
+          key: '22',
+          name: 'Total',
+          num: 0,
+          unlockTime: '',
+          idtDaily: 0
+        },
       ],
       columns1:[
         {
@@ -432,17 +442,23 @@ export default {
     async getPoolIDTBalance(poolName) {
         const tokenErc = new ERC20(cfg['IDT'].address)
         const IDTBalance = await tokenErc.balanceOf(cfg[poolName].address)
-        return commify(Number(formatEther(IDTBalance)).toFixed(2))
+        return Number(formatEther(IDTBalance)).toFixed(2) //commify(Number(formatEther(IDTBalance)).toFixed(2))
     },
     combinationData() {
       const pool = new poolCash()
+      this.idtNumTotal = 0
+      this.idtDailyTotal = 0
       this.data.map(async v => {
           const idtNum = await this.getPoolIDTBalance(v.name)
           const unlockTime = await pool.getUnlockTime(v.name)
           const idtDaily = await pool.getRewardRate(v.name)
-          v.num = idtNum
+          v.num = commify(idtNum)
           v.unlockTime = parseTime(unlockTime)
           v.idtDaily = commify((idtDaily).toFixed(0))
+          this.idtNumTotal += Number(idtNum)
+          this.idtDailyTotal += Number(idtDaily)
+          this.data[this.data.length-1].num = commify(this.idtNumTotal.toFixed(2))
+          this.data[this.data.length-1].idtDaily = commify(this.idtDailyTotal.toFixed(2))
       })
     },
     combinationProfitData() {
